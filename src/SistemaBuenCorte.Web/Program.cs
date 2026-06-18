@@ -13,6 +13,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Registrar el servicio de productos
 builder.Services.AddScoped<IProductoService, ProductoService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // CORS para React
 builder.Services.AddCors(options =>
