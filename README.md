@@ -1,92 +1,110 @@
 # SistemaBuenCorte
 Sistema de facturación e inventario para la carnicería El Buen Corte. Proyecto de Programación III.
 
-## Descripción
+## Resumen
+Aplicación web multicapa (API .NET + React) para gestionar productos, inventario y ventas. Usa SQL Server LocalDB y Entity Framework Core. Este README contiene pasos reproducibles para ejecutar la solución localmente.
 
-Aplicación web multicapa para la gestión de una carnicería. Permite la
-autenticación de usuarios según su rol (cajero y administrador), la gestión
-del inventario de productos y la facturación de ventas. El sistema persiste
-los datos en una base de datos SQL Server mediante Entity Framework Core.
+## Tecnologías
+- C# / .NET 9 (net9.0)
+- ASP.NET Core
+- Entity Framework Core 9
+- SQL Server LocalDB
+- React (Create React App)
+- Node.js
 
-## Tecnologías utilizadas
+## Requisitos y verificación
+- .NET 9 SDK (comprobar con `dotnet --version`; se requiere 9.x)
+- SQL Server LocalDB (instancia `(localdb)\\MSSQLLocalDB`). LocalDB es un componente del sistema, no está incluido en el repositorio; instalar SQL Server Express LocalDB o Visual Studio.
+- Node.js 18+ y npm
+- dotnet-ef (opcional, para migraciones): `dotnet tool install --global dotnet-ef`
+- Git
 
-- C# / .NET 8
-- ASP.NET Core (Web Application)
-- Entity Framework Core
-- SQL Server
-- Arquitectura multicapa (Presentación · Lógica de Negocio · Acceso a Datos)
-
-## Requisitos previos
-
-- .NET SDK 8.0 o superior
-- SQL Server (LocalDB, Express o instancia local)
-- Visual Studio 2022 o Visual Studio Code
-- Herramienta `dotnet-ef` (`dotnet tool install --global dotnet-ef`)
-
-## Instalación y ejecución
-
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/USUARIO/SistemaBuenCorte.git
-cd SistemaBuenCorte
-
-# 2. Configurar la cadena de conexión
-#    Copia tu cadena de conexión local en appsettings.Development.json
-#    (no edites appsettings.json para evitar conflictos entre integrantes)
-
-# 3. Restaurar dependencias
-dotnet restore
-
-# 4. Aplicar las migraciones (crea la base de datos y las tablas)
-dotnet ef database update
-
-# 5. Ejecutar el proyecto
-dotnet run
+Verificación rápida (ejecuta antes de continuar):
+```powershell
+dotnet --version
+sqllocaldb info MSSQLLocalDB
+sqllocaldb start MSSQLLocalDB
+node --version
+npm --version
+git --version
 ```
 
-> **Nota sobre la cadena de conexión:** cada integrante debe usar su propia
-> instancia de SQL Server. Coloca tu cadena real en
-> `appsettings.Development.json` (ignorado por git) o en User Secrets.
-> El archivo `appsettings.json` versionado contiene solo un valor de ejemplo.
+Recomendaciones rápidas:
+- LocalDB debe estar instalado y ejecutándose en la máquina (el repositorio no contiene el motor de base de datos). Ejecutar `sqllocaldb start MSSQLLocalDB` antes de aplicar migraciones.
+- Usar `npm ci` para instalaciones reproducibles en entornos de evaluación; `npm install` está bien para desarrollo local.
+- Instalar `dotnet-ef` para aplicar migraciones localmente si se van a ejecutar: `dotnet tool install --global dotnet-ef`.
+- Si Git en Windows da errores por longitud de rutas, habilitar rutas largas: `git config --system core.longpaths true`.
+- Detener servidores (`dotnet run`, `npm start`) antes de ejecutar `dotnet ef database update`.
 
-## Estructura del proyecto
+Si prefieres usar Docker en vez de LocalDB, ajustar la cadena de conexión en `appsettings.Development.json` y documentar el contenedor a usar.
 
+## Estructura
+```
 SistemaBuenCorte/
-
 ├── SistemaBuenCorte.sln
-
 ├── src/
+│   ├── SistemaBuenCorte.Web/    # API + proyecto web
+│   ├── SistemaBuenCorte.BLL/    # Lógica de negocio
+│   └── SistemaBuenCorte.DAL/    # DbContext, entidades, migraciones
+```
 
-│   ├── SistemaBuenCorte.Web/    # Presentación (Controllers, Views, navbar/sidebar)
+## Pasos para ejecutar (desde la raíz del repositorio)
+1) Asegurar `develop` actualizado:
+```bash
+git checkout develop
+git pull origin develop
+```
 
-│   ├── SistemaBuenCorte.BLL/    # Lógica de negocio (Services)
+2) Iniciar LocalDB (si no está):
+```powershell
+sqllocaldb start MSSQLLocalDB
+```
 
-│   └── SistemaBuenCorte.DAL/    # Acceso a datos (DbContext, Entities, Migrations)
+3) Aplicar migraciones y crear la base `ElBuenCorte`:
+(Detener cualquier `dotnet run` antes de ejecutar)
+```bash
+dotnet restore
+dotnet ef database update --project src\SistemaBuenCorte.DAL --startup-project src\SistemaBuenCorte.Web
+```
 
-├── README.md
+4) Ejecutar backend (Terminal A):
+```bash
+dotnet run --project src\SistemaBuenCorte.Web
+```
 
-└── .gitignore
+5) Ejecutar frontend (Terminal B):
+```bash
+cd src\SistemaBuenCorte.Web
+npm install
+npm start
+```
+O, para el sub-app `login-react-ts`:
+```bash
+cd src\SistemaBuenCorte.Web\login-react-ts
+npm install
+npm start
+```
 
-## Módulos implementados
+6) Credenciales de prueba (datos semilla):
+- admin / Admin123!
+- cajero / Cajero123!
 
-- [ ] Base de datos y configuración del repositorio
-- [ ] Módulo de Login (autenticación y validación por rol)
-- [ ] Módulo de Productos (CRUD con validaciones)
-- [ ] Listado de productos con filtro por nombre o categoría
+Las contraseñas se almacenan como hashes BCrypt en la BD.
 
-## Roles del sistema
-
-- *Cajero:* acceso a facturación y operaciones de venta.
-- *Administrador:* gestión de productos, inventario y acceso a reportes.
+## Cómo actualizar semillas (si hace falta)
+- Generar hashes BCrypt localmente y reemplazar `ContrasenaHash` en `AppDbContext.OnModelCreating`.
+- Crear migración desde la raíz:
+```bash
+dotnet ef migrations add UpdateSeedPasswords --project src\SistemaBuenCorte.DAL --startup-project src\SistemaBuenCorte.Web
+dotnet ef database update --project src\SistemaBuenCorte.DAL --startup-project src\SistemaBuenCorte.Web
+```
 
 ## Autores
-
-- Dioris Arias — @usuario_github
-- (Integrante 2) — @usuario_github
-- (Integrante 3) — @usuario_github
-- (Integrante 4) — @usuario_github
-- (Integrante 5) — @usuario_github
+- Dioris Arias — @KoroDomo
+- Gabriel Cuevas — @GabrielCuevas123 
+- Johanny Torres — @johannytorres
+- Josue David Guerrero — @guerrerodavid
+- Mayerlin Alcántara — @MayiiAV
 
 ---
-
 Programación III · ITLA · 2026

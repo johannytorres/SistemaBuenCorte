@@ -101,7 +101,7 @@ public class AppDbContext : DbContext
                 Id = 1,
                 NombreCompleto = "Administrador del Sistema",
                 NombreUsuario = "admin",
-                ContrasenaHash = "PLACEHOLDER_CAMBIAR",
+                ContrasenaHash = "$2a$11$ZiF34myITAxk5LYYp4vIS.aN.zFmicf1eoscUjqFlriTsEKQKWgq6",
                 Rol = "Administrador",
                 Activo = true,
                 FechaCreacion = new DateTime(2026, 1, 1)
@@ -111,7 +111,7 @@ public class AppDbContext : DbContext
                 Id = 2,
                 NombreCompleto = "Cajero de Prueba",
                 NombreUsuario = "cajero",
-                ContrasenaHash = "PLACEHOLDER_CAMBIAR",
+                ContrasenaHash = "$2a$11$jEUie1ZnO7uOi.aj0Trki.QkINtTVDqa784n3C/aIiKM2dHPcGXsC",
                 Rol = "Cajero",
                 Activo = true,
                 FechaCreacion = new DateTime(2026, 1, 1)
@@ -140,6 +140,42 @@ public class AppDbContext : DbContext
                 TipoVenta = "Unidad",
                 Precio = 350.00m,
                 Stock = 40,
+                Activo = true,
+                FechaCreacion = new DateTime(2026, 1, 1)
+            },
+            new Producto
+            {
+                Id = 3,
+                Nombre = "Chorizo artesanal",
+                Descripcion = "Chorizo fresco, sazonado",
+                Categoria = "Embutidos",
+                TipoVenta = "Peso",
+                Precio = 220.00m,
+                Stock = 30.5m,
+                Activo = true,
+                FechaCreacion = new DateTime(2026, 1, 1)
+            },
+            new Producto
+            {
+                Id = 4,
+                Nombre = "Costilla de cerdo",
+                Descripcion = "Costilla para asar, por kilo",
+                Categoria = "Cerdo",
+                TipoVenta = "Peso",
+                Precio = 300.00m,
+                Stock = 18.75m,
+                Activo = true,
+                FechaCreacion = new DateTime(2026, 1, 1)
+            },
+            new Producto
+            {
+                Id = 5,
+                Nombre = "Salchichas mixtas (pack)",
+                Descripcion = "Pack de 5 salchichas artesanales",
+                Categoria = "Embutidos",
+                TipoVenta = "Unidad",
+                Precio = 120.00m,
+                Stock = 50,
                 Activo = true,
                 FechaCreacion = new DateTime(2026, 1, 1)
             }

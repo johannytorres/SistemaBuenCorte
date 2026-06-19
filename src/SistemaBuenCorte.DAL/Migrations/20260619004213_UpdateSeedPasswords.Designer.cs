@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaBuenCorte.DAL.Data;
 
@@ -11,9 +12,11 @@ using SistemaBuenCorte.DAL.Data;
 namespace SistemaBuenCorte.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260619004213_UpdateSeedPasswords")]
+    partial class UpdateSeedPasswords
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,42 +247,6 @@ namespace SistemaBuenCorte.DAL.Migrations
                             Nombre = "Pechuga de pollo (bandeja)",
                             Precio = 350.00m,
                             Stock = 40m,
-                            TipoVenta = "Unidad"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Categoria = "Embutidos",
-                            Descripcion = "Chorizo fresco, sazonado",
-                            FechaCreacion = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Nombre = "Chorizo artesanal",
-                            Precio = 220.00m,
-                            Stock = 30.5m,
-                            TipoVenta = "Peso"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Categoria = "Cerdo",
-                            Descripcion = "Costilla para asar, por kilo",
-                            FechaCreacion = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Nombre = "Costilla de cerdo",
-                            Precio = 300.00m,
-                            Stock = 18.75m,
-                            TipoVenta = "Peso"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Activo = true,
-                            Categoria = "Embutidos",
-                            Descripcion = "Pack de 5 salchichas artesanales",
-                            FechaCreacion = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Nombre = "Salchichas mixtas (pack)",
-                            Precio = 120.00m,
-                            Stock = 50m,
                             TipoVenta = "Unidad"
                         });
                 });
