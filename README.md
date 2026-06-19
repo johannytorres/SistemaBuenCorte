@@ -1,84 +1,92 @@
 # SistemaBuenCorte
 Sistema de facturación e inventario para la carnicería El Buen Corte. Proyecto de Programación III.
 
-## Descripción
-Aplicación web multicapa para la gestión de una carnicería. Permite la autenticación de usuarios según su rol (cajero y administrador), la gestión del inventario de productos y la facturación de ventas. El sistema persiste los datos en una base de datos SQL Server (LocalDB) mediante Entity Framework Core. El frontend está desarrollado en React.
+## Resumen
+Aplicación web multicapa (API .NET + React) para gestionar productos, inventario y ventas. Usa SQL Server LocalDB y Entity Framework Core. Este README contiene pasos reproducibles para ejecutar la solución localmente.
 
-## Tecnologías utilizadas
-- C# / .NET 10
-- ASP.NET Core Web API
-- Entity Framework Core
+## Tecnologías
+- C# / .NET 9 (net9.0)
+- ASP.NET Core
+- Entity Framework Core 9
 - SQL Server LocalDB
 - React (Create React App)
-- Axios
-- Arquitectura multicapa (Presentación · Lógica de Negocio · Acceso a Datos)
+- Node.js
 
-## Requisitos previos
-- .NET SDK 10.0 o superior
-- SQL Server LocalDB (viene incluido con Visual Studio 2022)
-- Visual Studio 2022
-- Node.js 18 o superior
-- Herramienta dotnet-ef:
-```bash
-dotnet tool install --global dotnet-ef
-```
+## Requisitos
+- .NET 9 SDK
+- SQL Server LocalDB (localdb)\MSSQLLocalDB
+- Node.js 18+
+- dotnet-ef tool (opcional local): `dotnet tool install --global dotnet-ef`
 
-## Estructura del proyecto
+## Estructura
 ```
 SistemaBuenCorte/
 ├── SistemaBuenCorte.sln
 ├── src/
-│   ├── SistemaBuenCorte.WEB/    # API (Controllers, Program.cs) + Frontend React
-│   ├── SistemaBuenCorte.BLL/    # Lógica de negocio (Services, DTOs)
-│   └── SistemaBuenCorte.DAL/    # Acceso a datos (DbContext, Entidades, Migraciones)
-├── README.md
-└── .gitignore
+│   ├── SistemaBuenCorte.Web/    # API + proyecto web
+│   ├── SistemaBuenCorte.BLL/    # Lógica de negocio
+│   └── SistemaBuenCorte.DAL/    # DbContext, entidades, migraciones
 ```
 
-## Instalación y ejecución
-
-### 1. Clonar el repositorio
+## Pasos para ejecutar (desde la raíz del repo)
+1) Asegurar `develop` actualizado:
 ```bash
-git clone https://github.com/USUARIO/SistemaBuenCorte.git
-cd SistemaBuenCorte
+git checkout develop
+git pull origin develop
 ```
 
-### 2. Crear la base de datos
-Entra a la carpeta DAL y aplica las migraciones:
-```bash
-cd src/SistemaBuenCorte.DAL
-dotnet ef database update
+2) Iniciar LocalDB (si no está):
+```powershell
+sqllocaldb start MSSQLLocalDB
 ```
-Esto crea la base de datos `ElBuenCorte` en tu LocalDB automáticamente. No necesitas configurar nada más.
 
-### 3. Ejecutar el backend
-Abre `SistemaBuenCorte.sln` en Visual Studio 2022 y presiona **F5** con el proyecto `SistemaBuenCorte.WEB` seleccionado.
-
-El backend queda corriendo en `https://localhost:7299`.
-
-### 4. Ejecutar el frontend (React)
-En otra terminal, entra a la carpeta del frontend:
+3) Aplicar migraciones y crear la base `ElBuenCorte`:
+(Detener cualquier `dotnet run` antes de ejecutar)
 ```bash
-cd src/SistemaBuenCorte.WEB
+dotnet restore
+dotnet ef database update --project src\SistemaBuenCorte.DAL --startup-project src\SistemaBuenCorte.Web
+```
+
+4) Ejecutar backend (Terminal A):
+```bash
+dotnet run --project src\SistemaBuenCorte.Web
+```
+
+5) Ejecutar frontend (Terminal B):
+```bash
+cd src\SistemaBuenCorte.Web
 npm install
 npm start
 ```
-El frontend abre en `http://localhost:3000`.
+O, para el sub-app `login-react-ts`:
+```bash
+cd src\SistemaBuenCorte.Web\login-react-ts
+npm install
+npm start
+```
 
-> **Importante:** el backend y el frontend deben estar corriendo al mismo tiempo para que el sistema funcione.
+6) Credenciales de prueba (datos semilla):
+- admin / Admin123!
+- cajero / Cajero123!
 
-## Módulos implementados
-- [x] Base de datos y migraciones (LocalDB)
-- [x] Módulo de Productos — CRUD completo con validaciones
-- [x] Listado de productos con búsqueda por nombre o categoría
-- [ ] Módulo de Login (autenticación y validación por rol)
-- [ ] Sidebar y navbar
-- [ ] Módulo de Ventas
-- [ ] Módulo de Caja
+Las contraseñas se almacenan como hashes BCrypt en la BD.
 
-## Roles del sistema
-- **Cajero:** acceso a facturación y operaciones de venta.
-- **Administrador:** gestión de productos, inventario y acceso a reportes.
+## Cómo actualizar semillas (si hace falta)
+- Generar hashes BCrypt localmente y reemplazar `ContrasenaHash` en `AppDbContext.OnModelCreating`.
+- Crear migración desde la raíz:
+```bash
+dotnet ef migrations add UpdateSeedPasswords --project src\SistemaBuenCorte.DAL --startup-project src\SistemaBuenCorte.Web
+dotnet ef database update --project src\SistemaBuenCorte.DAL --startup-project src\SistemaBuenCorte.Web
+```
+
+## Recomendaciones para la profesora (hacerlo más sencillo)
+- Incluir `setup.ps1` o `setup.bat` que: arranque LocalDB, aplique migraciones y deje backend escuchando.
+- Proveer un script `seed.sql` o migración incluida para no requerir pasos manuales.
+- Añadir instrucciones en el PR sobre cerrar servidores antes de migraciones y habilitar `git config --global core.longpaths true` en Windows si hay errores de ruta larga.
+
+## Buenas prácticas
+- No subir `node_modules` (ya en .gitignore).
+- Usar rama feature → PR → merge a `develop`.
 
 ## Autores
 - Dioris Arias — @usuario_github
