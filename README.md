@@ -12,11 +12,23 @@ Aplicación web multicapa (API .NET + React) para gestionar productos, inventari
 - React (Create React App)
 - Node.js
 
-## Requisitos
-- .NET 9 SDK
-- SQL Server LocalDB (localdb)\MSSQLLocalDB
-- Node.js 18+
-- dotnet-ef tool (opcional local): `dotnet tool install --global dotnet-ef`
+## Requisitos y verificación
+- .NET 9 SDK (comprobar con `dotnet --version`)
+- SQL Server LocalDB (Instance: `(localdb)\\MSSQLLocalDB`) — comprobar con `sqllocaldb info MSSQLLocalDB`
+- Node.js 18+ (comprobar con `node --version`)
+- dotnet-ef (herramienta opcional): `dotnet tool install --global dotnet-ef`
+
+Verificación rápida (ejecuta antes de continuar):
+```powershell
+dotnet --version
+sqllocaldb info MSSQLLocalDB
+sqllocaldb start MSSQLLocalDB
+node --version
+npm --version
+git --version
+```
+
+Si LocalDB no está instalado, instalar SQL Server Express LocalDB o Visual Studio (incluye LocalDB). Como alternativa, se puede usar un contenedor Docker con SQL Server y ajustar la cadena de conexión en `appsettings.Development.json`.
 
 ## Estructura
 ```
@@ -28,7 +40,7 @@ SistemaBuenCorte/
 │   └── SistemaBuenCorte.DAL/    # DbContext, entidades, migraciones
 ```
 
-## Pasos para ejecutar (desde la raíz del repo)
+## Pasos para ejecutar (desde la raíz del repositorio)
 1) Asegurar `develop` actualizado:
 ```bash
 git checkout develop
@@ -79,21 +91,12 @@ dotnet ef migrations add UpdateSeedPasswords --project src\SistemaBuenCorte.DAL 
 dotnet ef database update --project src\SistemaBuenCorte.DAL --startup-project src\SistemaBuenCorte.Web
 ```
 
-## Recomendaciones para la profesora (hacerlo más sencillo)
-- Incluir `setup.ps1` o `setup.bat` que: arranque LocalDB, aplique migraciones y deje backend escuchando.
-- Proveer un script `seed.sql` o migración incluida para no requerir pasos manuales.
-- Añadir instrucciones en el PR sobre cerrar servidores antes de migraciones y habilitar `git config --global core.longpaths true` en Windows si hay errores de ruta larga.
-
-## Buenas prácticas
-- No subir `node_modules` (ya en .gitignore).
-- Usar rama feature → PR → merge a `develop`.
-
 ## Autores
-- Dioris Arias — @usuario_github
-- Gabriel Cuevas — @usuario_github
-- Johanny Torres — @usuario_github
-- Josue David Guerrero — @usuario_github
-- Mayerlin Alcántara — @usuario_github
+- Dioris Arias — @KoroDomo
+- Gabriel Cuevas — @GabrielCuevas123 
+- Johanny Torres — @johannytorres
+- Josue David Guerrero — @guerrerodavid
+- Mayerlin Alcántara — @MayiiAV
 
 ---
 Programación III · ITLA · 2026
