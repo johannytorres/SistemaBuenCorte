@@ -4,6 +4,7 @@ import LoginPage from "./components/LoginPage";
 import AppLayout from "./components/AppLayout";
 import RutaProtegida from "./components/RutaProtegida";
 import ProductosPage from "./components/ProductosPage";
+import CajaPage from "./components/CajaPage";
 
 /* ──────────────────────────────────────────────
    Páginas placeholder para rutas futuras
@@ -113,7 +114,11 @@ function App() {
             {/* Caja → ambos roles */}
             <Route
               path="/caja"
-              element={<PlaceholderPage nombre="Caja" />}
+              element={
+                  <RutaProtegida>
+                      <CajaPage />
+                      </RutaProtegida>
+                  }
             />
 
             {/* Reportes → solo admin */}
