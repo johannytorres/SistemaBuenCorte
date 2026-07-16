@@ -6,6 +6,7 @@ import RutaProtegida from "./components/RutaProtegida";
 import ProductosPage from "./components/ProductosPage";
 import VentasPage from "./components/VentasPage";
 import CajaPage from "./components/CajaPage";
+import ReportesPage from "./components/ReportesPage";
 import DescuentosPage from "./components/DescuentosPage";
 
 /* ──────────────────────────────────────────────
@@ -67,12 +68,18 @@ function App() {
               </RutaProtegida>
             }
           >
-            {/* Dashboard → solo admin */}
+            {/* Dashboard → redirige a reportes */}
             <Route
               path="/dashboard"
+              element={<Navigate to="/reportes" replace />}
+            />
+
+            {/* Reportes → página principal al entrar (solo admin) */}
+            <Route
+              path="/reportes"
               element={
                 <RutaProtegida rolRequerido="Administrador">
-                  <PlaceholderPage />
+                  <PlaceholderPage nombre="Dashboard" />
                 </RutaProtegida>
               }
             />
@@ -97,17 +104,7 @@ function App() {
               }
             />
 
-            {/* Usuarios → solo admin */}
-            <Route
-              path="/usuarios"
-              element={
-                <RutaProtegida rolRequerido="Administrador">
-                  <PlaceholderPage nombre="Usuarios" />
-                </RutaProtegida>
-              }
-            />
-
-            {/* Ventas → ambos roles (aunque el cajero entra por punto de venta, mantenemos la ruta por compatibilidad) */}
+            {/* Ventas → ambos roles */}
             <Route
               path="/ventas"
               element={<VentasPage />}
@@ -117,37 +114,27 @@ function App() {
             <Route
               path="/caja"
               element={
-                  <RutaProtegida>
-                      <CajaPage />
-                      </RutaProtegida>
-                  }
-            />
-
-            {/* Reportes → solo admin */}
-            <Route
-              path="/reportes"
-              element={
-                <RutaProtegida rolRequerido="Administrador">
-                  <PlaceholderPage nombre="Reportes" />
+                <RutaProtegida>
+                  <CajaPage />
                 </RutaProtegida>
               }
             />
 
-            {/* Punto de Venta → ambos roles (operación) */}
+            {/* Punto de Venta → ambos roles */}
             <Route
               path="/punto-venta"
               element={<VentasPage />}
             />
 
-            {/* Historial de ventas → ambos roles (operación) */}
+            {/* Historial de ventas → ambos roles */}
             <Route
               path="/historial"
               element={<PlaceholderPage nombre="Historial de ventas" />}
             />
           </Route>
 
-          {/* Redireccionamiento raíz */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          {/* Al entrar → va a reportes directamente */}
+          <Route path="/" element={<Navigate to="/reportes" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </AuthProvider>
