@@ -6,6 +6,7 @@ import RutaProtegida from "./components/RutaProtegida";
 import ProductosPage from "./components/ProductosPage";
 import VentasPage from "./components/VentasPage";
 import CajaPage from "./components/CajaPage";
+import DescuentosPage from "./components/DescuentosPage";
 
 /* ──────────────────────────────────────────────
    Páginas placeholder para rutas futuras
@@ -71,7 +72,7 @@ function App() {
               path="/dashboard"
               element={
                 <RutaProtegida rolRequerido="Administrador">
-                  <PlaceholderPage nombre="Dashboard" />
+                  <PlaceholderPage />
                 </RutaProtegida>
               }
             />
@@ -91,7 +92,7 @@ function App() {
               path="/descuentos"
               element={
                 <RutaProtegida rolRequerido="Administrador">
-                  <PlaceholderPage nombre="Descuentos" />
+                  <DescuentosPage />
                 </RutaProtegida>
               }
             />
